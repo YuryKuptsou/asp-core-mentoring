@@ -1,0 +1,8 @@
+﻿@model IEnumerable<CategoryViewModel>
+
+<ul>
+    @foreach (var category in Model)
+    {
+        <li>@category.CategoryName</li>
+    }
+</ul>
