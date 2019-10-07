@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DAL.Repositories
 {
-    public class SupplierRepository : ISupplierCategory
+    public class SupplierRepository : ISupplierRepository
     {
         private readonly NorthwindContext _context;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Interfaces
 {
-    public interface ISupplierCategory
+    public interface ISupplierRepository
     {
         IEnumerable<Supplier> GetAll();
     }
