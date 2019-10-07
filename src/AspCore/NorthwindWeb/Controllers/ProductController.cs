@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NorthwindWeb.Infrastructure.Entities;
 using NorthwindWeb.Infrastructure.Interfaces;
+using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
 
 namespace NorthwindWeb.Controllers
@@ -12,15 +14,17 @@ namespace NorthwindWeb.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ProductOptions _options;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IOptionsSnapshot<ProductOptions> options)
         {
             _productService = productService;
+            _options = options.Value;
         }
 
         public IActionResult Index()
         {
-            var products = _productService.GetAll().Select(s => MapProductVM(s));
+            var products = _productService.GetAll(_options.ProductCount).Select(s => MapProductVM(s));
 
             return View(products);
         }

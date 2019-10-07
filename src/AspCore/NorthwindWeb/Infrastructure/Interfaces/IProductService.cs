@@ -8,6 +8,6 @@ namespace NorthwindWeb.Infrastructure.Interfaces
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetAll();
+        IEnumerable<Product> GetAll(int count);
     }
 }

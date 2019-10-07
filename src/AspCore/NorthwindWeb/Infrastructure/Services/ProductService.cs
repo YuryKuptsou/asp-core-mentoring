@@ -17,7 +17,7 @@ namespace NorthwindWeb.Infrastructure.Services
         }
 
 
-        public IEnumerable<Product> GetAll()
+        public IEnumerable<Product> GetAll(int count)
         {
             var products = from product in _dbContext.Products
                            join supplier in _dbContext.Suppliers on product.SupplierId equals supplier.Id
@@ -36,8 +36,14 @@ namespace NorthwindWeb.Infrastructure.Services
                                CategoryName = category.CategoryName
                            };
 
-
-            return products.ToList();
+            if (count == 0)
+            {
+                return products.ToList();
+            }
+            else
+            {
+                return products.Take(count).ToList();
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NorthwindWeb.Infrastructure;
 using NorthwindWeb.Infrastructure.Interfaces;
+using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Infrastructure.Services;
 
 namespace NorthwindWeb
@@ -27,6 +28,10 @@ namespace NorthwindWeb
         {
             services.AddDbContext<NorthwindContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddOptions();
+            services.Configure<ProductOptions>(Configuration);
+
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
 
