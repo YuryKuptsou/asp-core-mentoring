@@ -34,6 +34,7 @@ namespace NorthwindWeb
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ISupplierService, SupplierService>();
 
             services.AddMvc();
         }
@@ -45,6 +46,7 @@ namespace NorthwindWeb
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
         }
     }

@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace NorthwindWeb.Infrastructure.Interfaces
 {
-    public interface IProductService
+    public interface ISupplierService
     {
-        IEnumerable<Product> GetAll(int count);
-        Product Get(int id);
-        int Create(Product product);
-        void Update(Product product);
+        IEnumerable<Supplier> GetAll();
     }
 }

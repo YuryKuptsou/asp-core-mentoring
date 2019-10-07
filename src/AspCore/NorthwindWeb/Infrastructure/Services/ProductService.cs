@@ -16,6 +16,10 @@ namespace NorthwindWeb.Infrastructure.Services
             _dbContext = dbContext;
         }
 
+        public Product Get(int id)
+        {
+            return _dbContext.Products.Find(id);
+        }
 
         public IEnumerable<Product> GetAll(int count)
         {
@@ -44,6 +48,20 @@ namespace NorthwindWeb.Infrastructure.Services
             {
                 return products.Take(count).ToList();
             }
+        }
+
+        public int Create(Product product)
+        {
+            _dbContext.Products.Add(product);
+            _dbContext.SaveChanges();
+
+            return product.Id;
+        }
+
+        public void Update(Product product)
+        {
+            _dbContext.Products.Update(product);
+            _dbContext.SaveChanges();
         }
     }
 }
