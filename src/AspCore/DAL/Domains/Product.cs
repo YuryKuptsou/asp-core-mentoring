@@ -15,7 +15,7 @@ namespace DAL.Domains
         public short ReorderLevel { get; set; }
         public bool Discontinued { get; set; }
 
-        public int SupplierId { get; set; }
-        public int CategoryId { get; set; }
+        public int SupplierID { get; set; }
+        public int CategoryID { get; set; }
     }
 }

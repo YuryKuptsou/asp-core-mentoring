@@ -7,9 +7,9 @@ using System.Text;
 
 namespace BLL.Infrastructure
 {
-    public class BllMaperProfile : Profile
+    public class BllMapperProfile : Profile
     {
-        public BllMaperProfile()
+        public BllMapperProfile()
         {
             CreateMap<Category, CategoryDTO>();
 

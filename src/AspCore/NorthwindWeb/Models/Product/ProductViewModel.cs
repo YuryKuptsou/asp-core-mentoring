@@ -10,7 +10,7 @@ namespace NorthwindWeb.Models
 {
     public class ProductViewModel
     {
-        public int Id { get; set; }
+        public int ProductID { get; set; }
 
         [Required]
         [StringLength(40)]

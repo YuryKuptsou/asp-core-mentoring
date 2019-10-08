@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BLL.DTO;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
-using NorthwindWeb.Infrastructure.Entities;
-using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
 
@@ -14,14 +15,17 @@ namespace NorthwindWeb.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly ICategoryService _categoryService;
         private readonly ProductOptions _options;
 
-        public ProductController(IProductService productService, ISupplierService supplierService, ICategoryService categoryService,
+        public ProductController(IMapper mapper, IProductService productService,
+            ISupplierService supplierService, ICategoryService categoryService,
             IOptionsSnapshot<ProductOptions> options)
         {
+            _mapper = mapper;
             _productService = productService;
             _categoryService = categoryService;
             _supplierService = supplierService;
@@ -30,7 +34,7 @@ namespace NorthwindWeb.Controllers
 
         public IActionResult Index()
         {
-            var products = _productService.GetAll(_options.ProductCount).Select(s => MapProductVM(s));
+            var products = _mapper.Map<IEnumerable<ProductViewModel>>(_productService.GetAll(_options.ProductCount));
 
             return View(products);
         }
@@ -55,7 +59,7 @@ namespace NorthwindWeb.Controllers
                 return NoContent();
             }
 
-            var model = MapProductVM(product);
+            var model = _mapper.Map<ProductViewModel>(product);
             model.Suppliers = GetSuppliers();
             model.Categories = GetCategories();
             ViewBag.Caption = "Update product";
@@ -74,13 +78,14 @@ namespace NorthwindWeb.Controllers
                 return View(model);
             }
 
-            if (model.Id == 0)
+            var product = _mapper.Map<ProductDTO>(model);
+            if (model.ProductID == 0)
             {
-                _productService.Create(MapProduct(model));
+                _productService.Create(product);
             }
             else
             {
-                _productService.Update(MapProduct(model));
+                _productService.Update(product);
             }
 
             return RedirectToAction("Index");
@@ -88,7 +93,7 @@ namespace NorthwindWeb.Controllers
 
         private IEnumerable<SelectListItem> GetCategories()
         {
-            var categories = _categoryService.GetAll().Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.CategoryName }).ToList();
+            var categories = _categoryService.GetAll().Select(s => new SelectListItem { Value = s.CategoryID.ToString(), Text = s.CategoryName }).ToList();
             categories.Insert(0, new SelectListItem { Value = "0", Text = "Select category" });
 
             return categories;
@@ -96,46 +101,10 @@ namespace NorthwindWeb.Controllers
 
         private IEnumerable<SelectListItem> GetSuppliers()
         {
-            var suppliers = _supplierService.GetAll().Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.CompanyName }).ToList();
+            var suppliers = _supplierService.GetAll().Select(s => new SelectListItem { Value = s.SupplierID.ToString(), Text = s.CompanyName }).ToList();
             suppliers.Insert(0, new SelectListItem { Value = "0", Text = "Select supplier" });
 
             return suppliers;
-        }
-
-        private ProductViewModel MapProductVM(Product product)
-        {
-            return new ProductViewModel
-            {
-                Id = product.Id,
-                ProductName = product.ProductName,
-                QuantityPerUnit = product.QuantityPerUnit,
-                UnitPrice = product.UnitPrice,
-                UnitsInStock = product.UnitsInStock,
-                UnitsOnOrder = product.UnitsOnOrder,
-                ReorderLevel = product.ReorderLevel,
-                Discontinued = product.Discontinued,
-                CategoryId = product.CategoryId,
-                SupplierId = product.SupplierId,
-                CompanyName = product.CompanyName,
-                CategoryName = product.CategoryName
-            };
-        }
-
-        private Product MapProduct(ProductViewModel productViewModel)
-        {
-            return new Product
-            {
-                Id = productViewModel.Id,
-                ProductName = productViewModel.ProductName,
-                QuantityPerUnit = productViewModel.QuantityPerUnit,
-                UnitPrice = productViewModel.UnitPrice,
-                UnitsInStock = productViewModel.UnitsInStock,
-                UnitsOnOrder = productViewModel.UnitsOnOrder,
-                ReorderLevel = productViewModel.ReorderLevel,
-                Discontinued = productViewModel.Discontinued,
-                CategoryId = productViewModel.CategoryId,
-                SupplierId = productViewModel.SupplierId
-            };
         }
     }
 }

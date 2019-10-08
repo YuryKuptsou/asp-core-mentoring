@@ -29,8 +29,8 @@ namespace BLL.Services
         public ProductDTO Get(int id)
         {
             var _product = from product in new[] { _productRepository.Get(id) }
-                           join supplier in _supplierRepository.GetAll() on product.SupplierId equals supplier.SupplierID
-                           join category in _categoryRepository.GetAll() on product.CategoryId equals category.CategoryID
+                           join supplier in _supplierRepository.GetAll() on product.SupplierID equals supplier.SupplierID
+                           join category in _categoryRepository.GetAll() on product.CategoryID equals category.CategoryID
                            select new ProductDTO
                            {
                                ProductID = product.ProductID,
@@ -41,7 +41,9 @@ namespace BLL.Services
                                UnitsOnOrder = product.UnitsOnOrder,
                                ReorderLevel = product.ReorderLevel,
                                Discontinued = product.Discontinued,
+                               SupplierID = supplier.SupplierID,
                                CompanyName = supplier.CompanyName,
+                               CategoryID = category.CategoryID,
                                CategoryName = category.CategoryName
                            };
 
@@ -51,8 +53,8 @@ namespace BLL.Services
         public IEnumerable<ProductDTO> GetAll(int count)
         {
             var products = from product in _productRepository.GetAll(count)
-                           join supplier in _supplierRepository.GetAll() on product.SupplierId equals supplier.SupplierID
-                           join category in _categoryRepository.GetAll() on product.CategoryId equals category.CategoryID
+                           join supplier in _supplierRepository.GetAll() on product.SupplierID equals supplier.SupplierID
+                           join category in _categoryRepository.GetAll() on product.CategoryID equals category.CategoryID
                            select new ProductDTO
                            {
                                ProductID = product.ProductID,
