@@ -1,56 +1,66 @@
 ﻿@model ProductViewModel
 
-<h3 class="text-center py-2 font-weight-light">@ViewBag.Caption</h3>
-<form asp-action="Update">
-    <div>
-        <input type="hidden" asp-for="ProductID" />
-        <div>
-            <label asp-for="ProductName"></label>
-            <input type="text" asp-for="ProductName" />
-            <span asp-validation-for="ProductName"></span>
-        </div>
-        <div>
-            <label asp-for="CategoryId"></label>
-            <select asp-for="CategoryId" asp-items="Model.Categories"></select>
-            <span asp-validation-for="CategoryId"></span>
-        </div>
-        <div>
-            <label asp-for="SupplierId"></label>
-            <select asp-for="SupplierId" asp-items="Model.Suppliers"></select>
-            <span asp-validation-for="SupplierId"></span>
-        </div>
-        <div>
-            <label asp-for="QuantityPerUnit"></label>
-            <input type="text" asp-for="QuantityPerUnit" />
-            <span asp-validation-for="QuantityPerUnit"></span>
-        </div>
-        <div>
-            <label asp-for="UnitPrice"></label>
-            <input type="text" asp-for="UnitPrice" />
-            <span asp-validation-for="UnitPrice"></span>
-        </div>
-        <div>
-            <label asp-for="UnitsInStock"></label>
-            <input type="text" asp-for="UnitsInStock" />
-            <span asp-validation-for="UnitsInStock"></span>
-        </div>
-        <div>
-            <label asp-for="UnitsOnOrder"></label>
-            <input type="text" asp-for="UnitsOnOrder" />
-            <span asp-validation-for="UnitsOnOrder"></span>
-        </div>
-        <div>
-            <label asp-for="ReorderLevel"></label>
-            <input type="text" asp-for="ReorderLevel" />
-            <span asp-validation-for="ReorderLevel"></span>
-        </div>
-        <div>
-            <label asp-for="Discontinued"></label>
-            <input type="checkbox" asp-for="Discontinued" />
-        </div>
-    </div>
-    <div>
-        <input type="submit" value="Save" />
-    </div>
+<div class="container">
+    <h3 class="text-center py-2 font-weight-light">@ViewBag.Caption</h3>
+    <div class="container bg-white py-3 border border-dark-50 rounded">
+        <form asp-action="Update">
+            <input type="hidden" asp-for="ProductID" />
+            <div class="form-group">
+                <label asp-for="ProductName"></label>
+                <input class="form-control" type="text" asp-for="ProductName" />
+                <span class="text-danger" asp-validation-for="ProductName"></span>
+            </div>
+            <div class="form-group">
 
-</form>
+                <label asp-for="CategoryID"></label>
+                <select class="form-control" asp-for="CategoryID" asp-items="Model.Categories"></select>
+                <span class="text-danger" asp-validation-for="CategoryID"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="SupplierID"></label>
+                <select class="form-control" asp-for="SupplierID" asp-items="Model.Suppliers"></select>
+                <span class="text-danger" asp-validation-for="SupplierID"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="QuantityPerUnit"></label>
+                <input class="form-control" type="text" asp-for="QuantityPerUnit" />
+                <span class="text-danger" asp-validation-for="QuantityPerUnit"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="UnitPrice"></label>
+                <input class="form-control" type="text" asp-for="UnitPrice" />
+                <span class="text-danger" asp-validation-for="UnitPrice"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="UnitsInStock"></label>
+                <input class="form-control" type="number" asp-for="UnitsInStock" />
+                <span class="text-danger" asp-validation-for="UnitsInStock"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="UnitsOnOrder"></label>
+                <input class="form-control" type="number" asp-for="UnitsOnOrder" />
+                <span class="text-danger" asp-validation-for="UnitsOnOrder"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="ReorderLevel"></label>
+                <input class="form-control" type="number" asp-for="ReorderLevel" />
+                <span class="text-danger" asp-validation-for="ReorderLevel"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="Discontinued" />
+                    <label class="form-check-label" asp-for="Discontinued"></label>
+                </div>
+            </div>
+            <div class="form-group d-flex justify-content-end mr-3 pt-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -68,6 +68,7 @@ namespace NorthwindWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Update(ProductViewModel model)
         {
             if (!ModelState.IsValid)

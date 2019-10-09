@@ -44,13 +44,13 @@ namespace NorthwindWeb.Models
 
         [Range(1, int.MaxValue, ErrorMessage = "Choose supplier")]
         [DisplayName("Supplier")]
-        public int SupplierId { get; set; }
+        public int SupplierID { get; set; }
         public string CompanyName { get; set; }
         public IEnumerable<SelectListItem> Suppliers { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Choose category")]
         [DisplayName("Category")]
-        public int CategoryId { get; set; }
+        public int CategoryID { get; set; }
         public string CategoryName { get; set; }
         public IEnumerable<SelectListItem> Categories { get; set; }
     }
