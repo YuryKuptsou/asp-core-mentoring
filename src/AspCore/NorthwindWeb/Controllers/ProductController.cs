@@ -7,6 +7,7 @@ using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
@@ -20,20 +21,23 @@ namespace NorthwindWeb.Controllers
         private readonly ISupplierService _supplierService;
         private readonly ICategoryService _categoryService;
         private readonly ProductOptions _options;
+        private readonly ILogger<ProductController> _logger;
 
         public ProductController(IMapper mapper, IProductService productService,
             ISupplierService supplierService, ICategoryService categoryService,
-            IOptionsSnapshot<ProductOptions> options)
+            IOptionsSnapshot<ProductOptions> options, ILogger<ProductController> logger)
         {
             _mapper = mapper;
             _productService = productService;
             _categoryService = categoryService;
             _supplierService = supplierService;
             _options = options.Value;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Read max product count: {count}", _options.ProductCount);
             var products = _mapper.Map<IEnumerable<ProductViewModel>>(_productService.GetAll(_options.ProductCount));
 
             return View(products);

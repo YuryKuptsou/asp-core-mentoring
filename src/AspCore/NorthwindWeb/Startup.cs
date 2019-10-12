@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NorthwindWeb.Infrastructure;
 using NorthwindWeb.Infrastructure.Options;
 
@@ -22,15 +23,24 @@ namespace NorthwindWeb
 {
     public class Startup
     {
+        private readonly ILogger<Startup> _logger;
+
+
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IConfiguration configuration)
+        
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var connstring = Configuration.GetConnectionString("DefaultConnection");
+            _logger.LogInformation("Read default connection string: {connString}", connstring);
+
             services.AddOptions();
             services.Configure<ProductOptions>(Configuration);
 
@@ -39,7 +49,7 @@ namespace NorthwindWeb
 
             //configure autofac
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new BllAutofacModule(Configuration.GetConnectionString("DefaultConnection")));
+            builder.RegisterModule(new BllAutofacModule(connstring));
 
             builder.Register(c => new MapperConfiguration(cfg =>
             {
@@ -63,6 +73,10 @@ namespace NorthwindWeb
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
