@@ -8,5 +8,8 @@ namespace DAL.Interfaces
     public interface ICategoryRepository
     {
         IEnumerable<Category> GetAll();
+        Category Get(int id);
+
+        void Update(Category category);
     }
 }

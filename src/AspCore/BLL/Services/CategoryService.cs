@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using DAL.Domains;
 using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,24 @@ namespace BLL.Services
             _categoryRepository = categoryRepository;
         }
 
+        public CategoryDTO Get(int id)
+        {
+            return _mapper.Map<CategoryDTO>(_categoryRepository.Get(id));
+        }
+
         public IEnumerable<CategoryDTO> GetAll()
         {
             return _mapper.Map<IEnumerable<CategoryDTO>>(_categoryRepository.GetAll());
+        }
+
+        public byte[] GetImage(int id)
+        {
+            return _categoryRepository.Get(id)?.Picture;
+        }
+
+        public void Update(CategoryDTO category)
+        {
+            _categoryRepository.Update(_mapper.Map<Category>(category));
         }
     }
 }

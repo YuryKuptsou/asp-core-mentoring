@@ -16,9 +16,21 @@ namespace DAL.Repositories
         {
             _context = context;
         }
+
+        public Category Get(int id)
+        {
+            return _context.Categories.Find(id);
+        }
+
         public IEnumerable<Category> GetAll()
         {
             return _context.Categories.AsNoTracking().ToList();
+        }
+
+        public void Update(Category category)
+        {
+            _context.Entry(category).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

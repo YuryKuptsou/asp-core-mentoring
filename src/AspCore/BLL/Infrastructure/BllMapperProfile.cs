@@ -12,6 +12,7 @@ namespace BLL.Infrastructure
         public BllMapperProfile()
         {
             CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>();
 
             CreateMap<Supplier, SupplierDTO>();
 

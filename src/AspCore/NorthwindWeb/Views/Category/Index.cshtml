@@ -1,10 +1,16 @@
 ﻿@model IEnumerable<CategoryViewModel>
 
 <div class="container my-2">
-    <ul class="list-group">
+    <div class="list-group">
         @foreach (var category in Model)
         {
-            <li class="list-group-item">@category.CategoryName</li>
+            <div class="list-group-item d-flex align-items-center">
+                <span class="w-25">@category.CategoryName</span>
+                <a asp-controller="Category" asp-action="Image" asp-route-id="@category.CategoryID">
+                    <img width="100" height="100" src="@Url.Action("Image","Category", new { id = category.CategoryID})" />
+                </a>
+                <a class="btn btn-primary btn-sm ml-auto" asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryID">Edit</a>
+            </div>
         }
-    </ul>
+    </div>
 </div>

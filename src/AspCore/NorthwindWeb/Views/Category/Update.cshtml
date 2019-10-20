@@ -1,0 +1,22 @@
+﻿@model CategoryViewModel
+
+<div class="container">
+    <h3 class="text-center py-2 font-weight-light">@ViewBag.Caption</h3>
+    <div class="container bg-white py-3 border border-dark-50 rounded">
+        <form enctype="multipart/form-data" asp-action="Update">
+            <div asp-validation-summary="ModelOnly"></div>
+            <input type="hidden" asp-for="CategoryID" />
+            <div class="form-group">
+                <label asp-for="CategoryName"></label>
+                <input class="form-control" type="text" asp-for="CategoryName" readonly />
+            </div>
+            <div class="form-group">
+                <input class="form-control-file" type="file" asp-for="Image" />
+                <span class="text-danger" asp-validation-for="Image"></span>
+            </div>
+            <div class="form-group d-flex justify-content-end mr-3 pt-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
