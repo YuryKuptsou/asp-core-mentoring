@@ -80,7 +80,11 @@ namespace NorthwindWeb
             }
 
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("image", "images/{id}", new { Controller = "Category", Action = "Image" });
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
