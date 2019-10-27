@@ -42,7 +42,7 @@ namespace NorthwindWeb.Infrastructure.Middleware
                 }
                 _cachedImages.Clear();
             }
-            _startExpiration = DateTime.Now;
+            
 
             var path = context.Request.Path;
             if (_cachedImages.TryGetValue(path, out var value))
@@ -69,8 +69,10 @@ namespace NorthwindWeb.Infrastructure.Middleware
 
                 await _next(context);
 
-                if (context.Response.ContentType.StartsWith(_contextTypePrefix))
+                if (context.Response.ContentType != null &&
+                    context.Response.ContentType.StartsWith(_contextTypePrefix))
                 {
+                    _startExpiration = DateTime.Now;
                     var route = context.GetRouteData();
                     if (route.Values.TryGetValue("id", out var routeId))
                     {

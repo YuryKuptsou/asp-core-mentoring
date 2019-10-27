@@ -47,8 +47,9 @@ namespace NorthwindWeb
             services.AddOptions();
             services.Configure<ProductOptions>(Configuration);
             services.Configure<ImageCacheOptions>(Configuration);
+            services.Configure<LogActionOptions>(Configuration);
 
-            services.AddMvcCore()
+            services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine();
 
             //configure autofac
