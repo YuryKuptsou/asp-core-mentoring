@@ -7,7 +7,7 @@ using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using NorthwindWeb.Infrastructure.Extension;
+using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Models;
 
 namespace NorthwindWeb.Controllers

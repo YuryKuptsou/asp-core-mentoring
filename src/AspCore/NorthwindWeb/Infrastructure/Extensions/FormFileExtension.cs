@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NorthwindWeb.Infrastructure.Extension
+namespace NorthwindWeb.Infrastructure.Extensions
 {
     public static class FormFileExtensions
     {

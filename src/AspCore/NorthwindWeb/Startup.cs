@@ -15,7 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using NorthwindWeb.Filters;
 using NorthwindWeb.Infrastructure;
+using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Infrastructure.Options;
 
 
@@ -43,6 +46,7 @@ namespace NorthwindWeb
 
             services.AddOptions();
             services.Configure<ProductOptions>(Configuration);
+            services.Configure<ImageCacheOptions>(Configuration);
 
             services.AddMvcCore()
                 .AddRazorViewEngine();
@@ -68,8 +72,10 @@ namespace NorthwindWeb
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ImageCacheOptions> options)
         {
+            var imageCache = options.Value;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -78,6 +84,8 @@ namespace NorthwindWeb
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
 
             app.UseStaticFiles();
             app.UseMvc(routes =>
