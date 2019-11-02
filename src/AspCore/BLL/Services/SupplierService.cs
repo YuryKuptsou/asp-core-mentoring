@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using DAL.Domains;
 using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace BLL.Services
     public class SupplierService : ISupplierService
     {
         private readonly IMapper _mapper;
-        private readonly ISupplierRepository _supplierRepository;
+        private readonly IRepository<Supplier> _supplierRepository;
 
-        public SupplierService(IMapper mapper, ISupplierRepository supplierRepository)
+        public SupplierService(IMapper mapper, IRepository<Supplier> supplierRepository)
         {
             _mapper = mapper;
             _supplierRepository = supplierRepository;

@@ -21,9 +21,7 @@ namespace BLL.Infrastructure
         {
             builder.RegisterType<NorthwindContext>().WithParameter("connString", _connectionString);
 
-            builder.RegisterType<SupplierRepository>().As<ISupplierRepository>();
-            builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
-            builder.RegisterType<ProductRepository>().As<IProductRepository>();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             
         }
     }

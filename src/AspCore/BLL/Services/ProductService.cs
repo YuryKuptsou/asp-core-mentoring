@@ -13,12 +13,12 @@ namespace BLL.Services
     public class ProductService : IProductService
     {
         private readonly IMapper _mapper;
-        private readonly IProductRepository _productRepository;
-        private readonly ISupplierRepository _supplierRepository;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Supplier> _supplierRepository;
+        private readonly IRepository<Category> _categoryRepository;
 
-        public ProductService(IMapper mapper, IProductRepository productRepository
-            ,ISupplierRepository supplierRepository, ICategoryRepository categoryRepository)
+        public ProductService(IMapper mapper, IRepository<Product> productRepository,
+            IRepository<Supplier> supplierRepository, IRepository<Category> categoryRepository)
         {
             _mapper = mapper;
             _productRepository = productRepository;
@@ -52,7 +52,14 @@ namespace BLL.Services
 
         public IEnumerable<ProductDTO> GetAll(int count)
         {
-            var products = from product in _productRepository.GetAll(count)
+            if (count < 0)
+            {
+                throw new ArgumentException();
+            }
+
+            var products = count == 0 ? _productRepository.GetAll() : _productRepository.Take(count);
+
+            var productsWithDetails = from product in products
                            join supplier in _supplierRepository.GetAll() on product.SupplierID equals supplier.SupplierID
                            join category in _categoryRepository.GetAll() on product.CategoryID equals category.CategoryID
                            select new ProductDTO
@@ -69,17 +76,19 @@ namespace BLL.Services
                                CategoryName = category.CategoryName
                            };
 
-            return products;
+            return productsWithDetails;
         }
 
-        public void Update(ProductDTO product)
+        public void CreateOrUpdate(ProductDTO product)
         {
-            _productRepository.Update(_mapper.Map<Product>(product));
-        }
-
-        public int Create(ProductDTO product)
-        {
-            return _productRepository.Create(_mapper.Map<Product>(product));
+            if (product.ProductID == 0)
+            {
+                _productRepository.Create(_mapper.Map<Product>(product));
+            }
+            else
+            {
+                _productRepository.Update(_mapper.Map<Product>(product));
+            }
         }
     }
 }

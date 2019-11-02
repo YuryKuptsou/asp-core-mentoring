@@ -84,14 +84,7 @@ namespace NorthwindWeb.Controllers
             }
 
             var product = _mapper.Map<ProductDTO>(model);
-            if (model.ProductID == 0)
-            {
-                _productService.Create(product);
-            }
-            else
-            {
-                _productService.Update(product);
-            }
+            _productService.CreateOrUpdate(product);
 
             return RedirectToAction("Index");
         }

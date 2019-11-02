@@ -12,9 +12,9 @@ namespace BLL.Services
     public class CategoryService : ICategoryService
     {
         private readonly IMapper _mapper;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IRepository<Category> _categoryRepository;
 
-        public CategoryService(IMapper mapper, ICategoryRepository categoryRepository)
+        public CategoryService(IMapper mapper, IRepository<Category> categoryRepository)
         {
             _mapper = mapper;
             _categoryRepository = categoryRepository;

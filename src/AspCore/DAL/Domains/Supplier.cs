@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DAL.Domains
 {
-    public class Supplier
+    public class Supplier : IEntity
     {
         public int SupplierID { get; set; }
         public string CompanyName { get; set; }

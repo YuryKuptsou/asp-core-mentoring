@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DAL.Domains
 {
-    public class Product
+    public class Product : IEntity
     {
         public int ProductID { get; set; }
         public string ProductName { get; set; }

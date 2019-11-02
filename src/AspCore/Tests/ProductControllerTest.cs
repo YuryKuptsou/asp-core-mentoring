@@ -136,10 +136,10 @@ namespace Tests
         }
 
         [Test]
-        public void UpdatePost_ReturnRedirectToActionAndCreate_WhenModelIsValidAndZeroModelId()
+        public void UpdatePost_ReturnRedirectToActionAndCreateOrUpdate_WhenModelIsValid()
         {
             //Arrange
-            Mock.Get(_productService).Setup(s => s.Create(It.IsAny<ProductDTO>())).Returns(1).Verifiable();
+            Mock.Get(_productService).Setup(s => s.CreateOrUpdate(It.IsAny<ProductDTO>())).Verifiable();
             var controller = new ProductController(_mapper, _productService, _supplierService, _categoryService, _options, _logger);
             var model = new ProductViewModel { ProductID = 0 };
 
@@ -153,26 +153,6 @@ namespace Tests
             Assert.That(redirectResult.ActionName, Is.EqualTo("Index"));
             Mock.Get(_productService).Verify();
         }
-
-        [Test]
-        public void UpdatePost_ReturnRedirectToActionAndUpdate_WhenModelIsValidAndNonZeroModelId()
-        {
-            //Arrange
-            Mock.Get(_productService).Setup(s => s.Update(It.IsAny<ProductDTO>())).Verifiable();
-            var controller = new ProductController(_mapper, _productService, _supplierService, _categoryService, _options, _logger);
-            var model = new ProductViewModel { ProductID = 1 };
-
-            //Act
-            var result = controller.Update(model);
-
-            //Assert
-            Assert.That(result, Is.InstanceOf<RedirectToActionResult>());
-            var redirectResult = result as RedirectToActionResult;
-            Assert.That(redirectResult.ControllerName, Is.Null);
-            Assert.That(redirectResult.ActionName, Is.EqualTo("Index"));
-            Mock.Get(_productService).Verify();
-        }
-
 
         private IEnumerable<ProductViewModel> GetProducts()
         {

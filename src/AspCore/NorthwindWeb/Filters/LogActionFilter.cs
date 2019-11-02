@@ -14,6 +14,11 @@ namespace NorthwindWeb.Filters
 {
     public class LogActionFilter : IAsyncActionFilter
     {
+        private ActionExecutingContext _context;
+
+        private readonly string _start = "start";
+        private readonly string _end = "end";
+
         private readonly ILogger<LogActionFilter> _logger;
         private readonly LogActionOptions _options;
 
@@ -25,34 +30,42 @@ namespace NorthwindWeb.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-            var actionName = controllerActionDescriptor.ActionName;
-            var controllerName = controllerActionDescriptor.ControllerName;
+            _context = context;
 
-            StringBuilder logString = new StringBuilder();
-            if (_options.LogParameters)
-            {
-                logString = context.ActionArguments.Aggregate(logString, (current, p) =>
+            LogAction(_start);
+            await next();
+            LogAction(_end);
+        }
+
+        private string GetActionArguments()
+        {
+            StringBuilder arguments = new StringBuilder();
+            arguments = _context.ActionArguments.Aggregate(arguments, (current, p) =>
                     current.Append(p.Key).Append(":")
                         .Append(JsonConvert.SerializeObject(p.Value))
                         .Append(Environment.NewLine));
-                _logger.LogInformation("Action {actionName} in controller {controllerName} start, arguments: {arguments}", actionName, controllerName, logString);
-            }
-            else
-            {
-                _logger.LogInformation("Action {actionName} in controller {controllerName} start", actionName, controllerName);
-            }
 
-            await next();
+            return arguments.ToString();
+        }
+
+        private void LogAction(string actionType)
+        {
+            var controllerActionDescriptor = _context.ActionDescriptor as ControllerActionDescriptor;
+            var actionName = controllerActionDescriptor.ActionName;
+            var controllerName = controllerActionDescriptor.ControllerName;
 
             if (_options.LogParameters)
             {
-                _logger.LogInformation("Action {actionName} in controller {controllerName} end, arguments: {arguments}", actionName, controllerName, logString);
+                var arguments = GetActionArguments();
+                _logger.LogInformation("Action {actionName} in controller {controllerName} {actionType}, arguments: {arguments}",
+                    actionName, controllerName, actionType, arguments);
             }
             else
             {
-                _logger.LogInformation("Action {actionName} in controller {controllerName} end", actionName, controllerName);
+                _logger.LogInformation("Action {actionName} in controller {controllerName} {actionType}",
+                    actionName, controllerName, actionType);
             }
         }
+
     }
 }
