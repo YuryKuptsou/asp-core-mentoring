@@ -42,27 +42,13 @@ namespace NorthwindWeb.Infrastructure.Extensions
                 return false;
             }
 
-            //-------------------------------------------
-            //  Attempt to read the file and check the first bytes
-            //-------------------------------------------
-            try
+           
+            if (postedFile.Length < ImageMinimumBytes)
             {
-                if (!postedFile.OpenReadStream().CanRead)
-                {
-                    return false;
-                }
-                //------------------------------------------
-                //check whether the image size exceeding the limit or not
-                //------------------------------------------ 
-                if (postedFile.Length < ImageMinimumBytes)
-                {
-                    return false;
-                }
+                return false;
             }
-            finally
-            {
-                postedFile.OpenReadStream().Position = 0;
-            }
+            
+            
 
             return true;
         }

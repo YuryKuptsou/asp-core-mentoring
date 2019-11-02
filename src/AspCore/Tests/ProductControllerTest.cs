@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NorthwindWeb.Controllers;
+using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
 using NUnit.Framework;
@@ -22,10 +23,11 @@ namespace Tests
         private ProductDTO _product;
 
         private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
+        //private readonly ICategoryService _categoryService;
         private readonly IOptionsSnapshot<ProductOptions> _options;
         private readonly ILogger<ProductController> _logger;
-        private readonly ISupplierService _supplierService;
+        //private readonly ISupplierService _supplierService;
+        private readonly IProductVMService _productVMService;
         private readonly IMapper _mapper;
 
         public ProductControllerTest()
@@ -38,11 +40,13 @@ namespace Tests
             Mock.Get(_productService).Setup(s => s.GetAll(It.IsAny<int>())).Returns(new[] {new ProductDTO()});
             Mock.Get(_productService).Setup(s => s.Get(It.IsAny<int>())).Returns(() => _product);
 
-            _supplierService = Mock.Of<ISupplierService>();
-            Mock.Get(_supplierService).Setup(s => s.GetAll()).Returns(new[] { new SupplierDTO() });
+            _productVMService = Mock.Of<IProductVMService>();
 
-            _categoryService = Mock.Of<ICategoryService>();
-            Mock.Get(_categoryService).Setup(s => s.GetAll()).Returns(new[] { new CategoryDTO() });
+            //_supplierService = Mock.Of<ISupplierService>();
+            //Mock.Get(_supplierService).Setup(s => s.GetAll()).Returns(new[] { new SupplierDTO() });
+
+            //_categoryService = Mock.Of<ICategoryService>();
+            //Mock.Get(_categoryService).Setup(s => s.GetAll()).Returns(new[] { new CategoryDTO() });
 
             _options = Mock.Of<IOptionsSnapshot<ProductOptions>>(m => m.Value == new ProductOptions { ProductCount = 3 });
             _logger = Mock.Of<ILogger<ProductController>>();
@@ -54,7 +58,7 @@ namespace Tests
         public void Index_ReturnViewResult_WithProductList()
         {
             //Arrange
-            var controller = new ProductController(_mapper, _productService, null, null, _options, _logger);
+            var controller = new ProductController(_mapper, _productService, null, _options, _logger);
 
             //Act
             var result = controller.Index();
@@ -71,7 +75,7 @@ namespace Tests
         public void Create_ReturnViewResult_WithZeroModelId()
         {
             //Arrange
-            var controller = new ProductController(_mapper, null, _supplierService, _categoryService, _options, _logger);
+            var controller = new ProductController(_mapper, null, _productVMService, _options, _logger);
 
             //Act
             var result = controller.Create();
@@ -90,7 +94,7 @@ namespace Tests
         {
             //Arrange
             _product = new ProductDTO { ProductID = 1 };
-            var controller = new ProductController(_mapper, _productService, _supplierService, _categoryService, _options, _logger);
+            var controller = new ProductController(_mapper, _productService, _productVMService, _options, _logger);
 
             //Act
             var result = controller.Update(id: 1);
@@ -108,7 +112,7 @@ namespace Tests
         {
             //Arrange
             _product = null;
-            var controller = new ProductController(_mapper, _productService, _supplierService, _categoryService, _options, _logger);
+            var controller = new ProductController(_mapper, _productService, _productVMService, _options, _logger);
 
             //Act
             var result = controller.Update(id: -1);
@@ -121,7 +125,7 @@ namespace Tests
         public void UpdatePost_ReturnViewResult_WhenModelStateIsNotValid()
         {
             //Arrange
-            var controller = new ProductController(_mapper, null, _supplierService, _categoryService, _options, _logger);
+            var controller = new ProductController(_mapper, null, _productVMService, _options, _logger);
             controller.ModelState.AddModelError("ProductName", "Required");
             var model = new ProductViewModel();
 
@@ -140,7 +144,7 @@ namespace Tests
         {
             //Arrange
             Mock.Get(_productService).Setup(s => s.CreateOrUpdate(It.IsAny<ProductDTO>())).Verifiable();
-            var controller = new ProductController(_mapper, _productService, _supplierService, _categoryService, _options, _logger);
+            var controller = new ProductController(_mapper, _productService, _productVMService, _options, _logger);
             var model = new ProductViewModel { ProductID = 0 };
 
             //Act
@@ -163,22 +167,6 @@ namespace Tests
             };
         }
 
-        private IEnumerable<SupplierDTO> GetSuppliers()
-        {
-            return new List<SupplierDTO>
-            {
-                new SupplierDTO(),
-                new SupplierDTO()
-            };
-        }
 
-        private IEnumerable<CategoryDTO> GetCategories()
-        {
-            return new List<CategoryDTO>
-            {
-                new CategoryDTO(),
-                new CategoryDTO()
-            };
-        }
     }
 }

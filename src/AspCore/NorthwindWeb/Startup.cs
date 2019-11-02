@@ -19,8 +19,9 @@ using Microsoft.Extensions.Options;
 using NorthwindWeb.Filters;
 using NorthwindWeb.Infrastructure;
 using NorthwindWeb.Infrastructure.Extensions;
+using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
-
+using NorthwindWeb.Infrastructure.Services;
 
 namespace NorthwindWeb
 {
@@ -66,6 +67,7 @@ namespace NorthwindWeb
             builder.RegisterType<CategoryService>().As<ICategoryService>();
             builder.RegisterType<SupplierService>().As<ISupplierService>();
             builder.RegisterType<ProductService>().As<IProductService>();
+            builder.RegisterType<ProductVMService>().As<IProductVMService>();
 
             builder.Populate(services);
             var container = builder.Build();

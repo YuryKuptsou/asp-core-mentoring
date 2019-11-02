@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
 
@@ -18,23 +19,21 @@ namespace NorthwindWeb.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
-        private readonly ISupplierService _supplierService;
-        private readonly ICategoryService _categoryService;
+        private readonly IProductVMService _productVMService;
         private readonly ProductOptions _options;
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(IMapper mapper, IProductService productService,
-            ISupplierService supplierService, ICategoryService categoryService,
-            IOptionsSnapshot<ProductOptions> options, ILogger<ProductController> logger)
+            IProductVMService productVMService, IOptionsSnapshot<ProductOptions> options,
+            ILogger<ProductController> logger)
         {
             _mapper = mapper;
             _productService = productService;
-            _categoryService = categoryService;
-            _supplierService = supplierService;
+            _productVMService = productVMService;
             _options = options.Value;
             _logger = logger;
         }
-
+         
         public IActionResult Index()
         {
             _logger.LogInformation("Read max product count: {count}", _options.ProductCount);
@@ -45,11 +44,9 @@ namespace NorthwindWeb.Controllers
 
         public IActionResult Create()
         {
-            var model = new ProductViewModel
-            {
-                Categories = GetCategories(),
-                Suppliers = GetSuppliers()
-            };
+            var model = new ProductViewModel();
+            _productVMService.PopulateSelectLists(model);
+
             ViewBag.Caption = "Create product";
 
             return View("Update", model);
@@ -64,8 +61,7 @@ namespace NorthwindWeb.Controllers
             }
 
             var model = _mapper.Map<ProductViewModel>(product);
-            model.Suppliers = GetSuppliers();
-            model.Categories = GetCategories();
+            _productVMService.PopulateSelectLists(model);
             ViewBag.Caption = "Update product";
 
             return View(model);
@@ -77,8 +73,7 @@ namespace NorthwindWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = GetCategories();
-                model.Suppliers = GetSuppliers();
+                _productVMService.PopulateSelectLists(model);
 
                 return View(model);
             }
@@ -87,22 +82,6 @@ namespace NorthwindWeb.Controllers
             _productService.CreateOrUpdate(product);
 
             return RedirectToAction("Index");
-        }
-
-        private IEnumerable<SelectListItem> GetCategories()
-        {
-            var categories = _categoryService.GetAll().Select(s => new SelectListItem { Value = s.CategoryID.ToString(), Text = s.CategoryName }).ToList();
-            categories.Insert(0, new SelectListItem { Value = "0", Text = "Select category" });
-
-            return categories;
-        }
-
-        private IEnumerable<SelectListItem> GetSuppliers()
-        {
-            var suppliers = _supplierService.GetAll().Select(s => new SelectListItem { Value = s.SupplierID.ToString(), Text = s.CompanyName }).ToList();
-            suppliers.Insert(0, new SelectListItem { Value = "0", Text = "Select supplier" });
-
-            return suppliers;
         }
     }
 }
