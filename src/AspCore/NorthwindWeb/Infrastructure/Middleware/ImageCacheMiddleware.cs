@@ -12,9 +12,8 @@ namespace NorthwindWeb.Infrastructure.Middleware
     public class ImageCacheMiddleware
     {
 
-        private ConcurrentDictionary<string, (string path, string contentType)> _cachedImages = 
-            new ConcurrentDictionary<string, (string path, string contentType)>();
-        private DateTime _startExpiration = DateTime.Now;
+        private ConcurrentDictionary<string, (string path, string contentType, DateTime expiration)> _cachedImages = 
+            new ConcurrentDictionary<string, (string path, string contentType, DateTime expiration)>();
         private readonly string _contextTypePrefix = "image";
         
 
@@ -34,64 +33,57 @@ namespace NorthwindWeb.Infrastructure.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (_startExpiration.AddSeconds(_cacheExpiration) < DateTime.Now)
-            {
-                foreach (var file in new DirectoryInfo(_cacheFolder).GetFiles())
-                {
-                    file.Delete();
-                }
-                _cachedImages.Clear();
-            }
-            
-
             var path = context.Request.Path;
             if (_cachedImages.TryGetValue(path, out var value))
             {
-                context.Response.ContentType = value.contentType;
-                var image = File.ReadAllBytes(value.path);
-                await context.Response.Body.WriteAsync(image, 0, image.Length);
+                if (DateTime.Now > value.expiration)
+                {
+                    _cachedImages.TryRemove(path, out _);
+                }
+                else
+                {
+                    context.Response.ContentType = value.contentType;
+                    var image = FileHelper.GetBytesFromFile(value.path);
+                    await context.Response.Body.WriteAsync(image, 0, image.Length);
 
-                return;
+                    return;
+                }
             }
 
             if (_cachedImages.Count >= _maxCachedImages)
             {
                 await _next(context);
-
-                return;
             }
-
-            var originalBodyStream = context.Response.Body;
-
-            using (var responseBody = new MemoryStream())
+            else
             {
-                context.Response.Body = responseBody;
+                var originalBodyStream = context.Response.Body;
 
-                await _next(context);
-
-                if (context.Response.ContentType != null &&
-                    context.Response.ContentType.StartsWith(_contextTypePrefix))
+                using (var responseBody = new MemoryStream())
                 {
-                    _startExpiration = DateTime.Now;
-                    var route = context.GetRouteData();
-                    if (route.Values.TryGetValue("id", out var routeId))
-                    {
-                        var imagePath = $"{_cacheFolder}/{routeId}";
-                        await CreateFile(context.Response.Body, imagePath);
-                        _cachedImages[path] = (imagePath, context.Response.ContentType);
-                    }
+                    context.Response.Body = responseBody;
+
+                    await _next(context);
+
+                    await CacheIfImage(context, path);
+
+                    context.Response.Body.Seek(0, SeekOrigin.Begin);
+                    await responseBody.CopyToAsync(originalBodyStream);
                 }
-                context.Response.Body.Seek(0, SeekOrigin.Begin);
-                await responseBody.CopyToAsync(originalBodyStream);
             }
         }
 
-        private async Task CreateFile(Stream stream, string name)
+        private async Task CacheIfImage(HttpContext context, PathString path)
         {
-            using (var source = File.Create(name))
+            if (context.Response.ContentType != null &&
+                        context.Response.ContentType.StartsWith(_contextTypePrefix))
             {
-                stream.Seek(0, SeekOrigin.Begin);
-                await stream.CopyToAsync(source);
+                var route = context.GetRouteData();
+                if (route.Values.TryGetValue("id", out var routeId))
+                {
+                    var imagePath = $"{_cacheFolder}/{routeId}";
+                    await FileHelper.CreateFile(context.Response.Body, imagePath);
+                    _cachedImages[path] = (imagePath, context.Response.ContentType, DateTime.Now.AddSeconds(_cacheExpiration));
+                }
             }
         }
     }
