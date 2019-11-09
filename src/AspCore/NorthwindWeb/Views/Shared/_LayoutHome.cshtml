@@ -9,27 +9,13 @@
 </head>
 <body class="d-flex flex-column">
 
-    @if (IsSectionDefined("header"))
-    {
-        @RenderSection("header")
-    }
-    else
-    {
-        <partial name="_Header" />
-    }
-
+    <partial name="_Header" />
+    <img src="https://images.unsplash.com/photo-1533282960533-51328aa49826?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1930&q=80" class="img-fluid" />
     <div id="page-content">
         @RenderBody()
     </div>
 
-    @if (IsSectionDefined("footer"))
-    {
-        @RenderSection("footer")
-    }
-    else
-    {
-        <partial name="_Footer" />
-    }
+    <partial name="_Footer" />
 
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/jquery-validate/jquery.validate.js"></script>
