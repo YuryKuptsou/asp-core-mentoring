@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Models;
+using SmartBreadcrumbs.Attributes;
 
 namespace NorthwindWeb.Controllers
 {
@@ -33,7 +34,8 @@ namespace NorthwindWeb.Controllers
             _options = options.Value;
             _logger = logger;
         }
-         
+
+        [Breadcrumb("Products")]
         public IActionResult Index()
         {
             _logger.LogInformation("Read max product count: {count}", _options.ProductCount);
@@ -42,6 +44,7 @@ namespace NorthwindWeb.Controllers
             return View(products);
         }
 
+        [Breadcrumb("Create")]
         public IActionResult Create()
         {
             var model = new ProductViewModel();
@@ -52,6 +55,7 @@ namespace NorthwindWeb.Controllers
             return View("Update", model);
         }
 
+        [Breadcrumb("Update")]
         public IActionResult Update(int id)
         {
             var product = _productService.Get(id);

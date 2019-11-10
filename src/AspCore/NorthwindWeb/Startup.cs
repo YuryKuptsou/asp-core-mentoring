@@ -22,6 +22,7 @@ using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Infrastructure.Services;
+using SmartBreadcrumbs.Extensions;
 
 namespace NorthwindWeb
 {
@@ -52,6 +53,8 @@ namespace NorthwindWeb
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine();
+
+            services.AddBreadcrumbs(GetType().Assembly);
 
             //configure autofac
             var builder = new ContainerBuilder();

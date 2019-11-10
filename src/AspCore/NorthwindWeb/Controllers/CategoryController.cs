@@ -9,6 +9,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Models;
+using SmartBreadcrumbs.Attributes;
 
 namespace NorthwindWeb.Controllers
 {
@@ -23,6 +24,7 @@ namespace NorthwindWeb.Controllers
             _categoryService = categoryService;
         }
 
+        [Breadcrumb("Categories")]
         public IActionResult Index()
         {
             var categories = _mapper.Map<IEnumerable<CategoryViewModel>>(_categoryService.GetAll());
@@ -41,6 +43,7 @@ namespace NorthwindWeb.Controllers
             return new FileStreamResult(new MemoryStream(category.Picture), category.ContentType);
         }
 
+        [Breadcrumb("Update")]
         public IActionResult Update(int id)
         {
             var category = _categoryService.Get(id);
