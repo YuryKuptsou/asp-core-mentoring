@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using NorthwindWeb.Filters;
 using NorthwindWeb.Infrastructure;
 using NorthwindWeb.Infrastructure.Extensions;
@@ -52,7 +53,12 @@ namespace NorthwindWeb
             services.Configure<LogActionOptions>(Configuration);
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
-                .AddRazorViewEngine();
+                .AddRazorViewEngine()
+                .AddJsonFormatters()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Formatting = Formatting.Indented;
+                });
 
             services.AddBreadcrumbs(GetType().Assembly);
 

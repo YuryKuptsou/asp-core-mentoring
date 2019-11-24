@@ -28,6 +28,11 @@ namespace BLL.Services
 
         public ProductDTO Get(int id)
         {
+            if (_productRepository.Get(id) == null)
+            {
+                return null;
+            }
+
             var _product = from product in new[] { _productRepository.Get(id) }
                            join supplier in _supplierRepository.GetAll() on product.SupplierID equals supplier.SupplierID
                            join category in _categoryRepository.GetAll() on product.CategoryID equals category.CategoryID
@@ -50,7 +55,7 @@ namespace BLL.Services
             return _product.FirstOrDefault();
         }
 
-        public IEnumerable<ProductDTO> GetAll(int count)
+        public IEnumerable<ProductDTO> GetAll(int count = 0)
         {
             if (count < 0)
             {

@@ -7,7 +7,7 @@ namespace BLL.Interfaces
 {
     public interface IProductService
     {
-        IEnumerable<ProductDTO> GetAll(int count);
+        IEnumerable<ProductDTO> GetAll(int count = 0);
         ProductDTO Get(int id);
         void CreateOrUpdate(ProductDTO product);
     }
