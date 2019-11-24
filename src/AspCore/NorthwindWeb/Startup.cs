@@ -97,7 +97,7 @@ namespace NorthwindWeb
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
+            //app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
 
             app.UseStaticFiles();
             app.UseMvc(routes =>

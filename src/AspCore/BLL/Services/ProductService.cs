@@ -95,5 +95,10 @@ namespace BLL.Services
                 _productRepository.Update(_mapper.Map<Product>(product));
             }
         }
+
+        public void Remove(ProductDTO product)
+        {
+            _productRepository.Delete(_mapper.Map<Product>(product));
+        }
     }
 }
