@@ -2,14 +2,14 @@
 
 <div class="container my-2">
     <div class="list-group">
-        @foreach (var category in Model)
-        {
-            <div class="list-group-item d-flex align-items-center">
-                <span class="w-25">@category.CategoryName</span>
-                <northwind-image-link image-id="@category.CategoryID"></northwind-image-link>
-                <a class="btn btn-primary btn-sm ml-auto" asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryID">Edit</a>
-            </div>
-        }
+        @*@foreach (var category in Model)
+            {
+                <div class="list-group-item d-flex align-items-center">
+                    <span class="w-25">@category.CategoryName</span>
+                    <northwind-image-link image-id="@category.CategoryID"></northwind-image-link>
+                    <a class="btn btn-primary btn-sm ml-auto" asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryID">Edit</a>
+                </div>
+            }*@
     </div>
 </div>
 
@@ -17,4 +17,24 @@
     {
     <partial name="_CategoryFooterPartial" />
     <partial name="_Footer" />
+}
+
+@section Scripts
+{
+    <script>
+        var uri = 'api/categories';
+        $("document").ready(function () {
+
+            $.getJSON(uri).done(function (data) {
+                $.each(data, function (key, item) {
+                    $('<div>', { class: "list-group-item d-flex align-items-center" }).append(
+                        $("<span>", { class: "w-25" }).text(item.categoryName),
+                        $("<a>", { href: '@Url.Action("Image")' + '?id=' + item.categoryID }).append($("<img>", { width: 100, height: 100, src: '@Url.Action("Image")' + '?id=' + item.categoryID })),
+                        $('<a class="btn btn-primary btn-sm ml-auto" href="' + '@Url.Action("Update")' + '?id=' + item.categoryID + '">Edit</a>'),
+                    ).appendTo('.list-group');
+                });
+            });
+        });
+    </script>
+
 }

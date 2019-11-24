@@ -3,7 +3,7 @@
 <div class="container my-2">
     <a class="btn btn-primary btn-sm mb-2" asp-action="Create">Create</a>
     <table class="table">
-        <tr class="text-center">
+        <tr class="table-header text-center">
             <th>Product Name</th>
             <th>Supplier</th>
             <th>Category</th>
@@ -13,11 +13,10 @@
             <th>Units On Order</th>
             <th>Reorder Level</th>
             <th>Discontinued</th>
-            <th></th>
         </tr>
-        @foreach (var product in Model)
+        @*@foreach (var product in Model)
         {
-            <tr>
+            <tr >
                 <td>@product.ProductName</td>
                 <td>@product.CompanyName</td>
                 <td>@product.CategoryName</td>
@@ -28,7 +27,33 @@
                 <td>@product.ReorderLevel</td>
                 <td>@product.Discontinued</td>
                 <td><a class="btn btn-primary btn-sm" asp-action="Update" asp-route-id="@product.ProductID">Edit</a></td>
-            </tr>
-        }
+            </tr>*@
+        @*}*@
     </table>
 </div>
+
+@section Scripts
+{
+<script>
+    var uri = 'api/products';
+    $("document").ready(function () {
+
+        $.getJSON(uri).done(function (data) {
+            $.each(data, function (key, item) {
+                $('<tr>').append(
+                    $('<td>').text(item.productName),
+                    $('<td>').text(item.companyName),
+                    $('<td>').text(item.categoryName),
+                    $('<td>').text(item.quantityPerUnit),
+                    $('<td>').text(item.unitPrice),
+                    $('<td>').text(item.unitsInStock),
+                    $('<td>').text(item.unitsOnOrder),
+                    $('<td>').text(item.reorderLevel),
+                    $('<td>').text(item.discontinued),
+                    $('<td>').append($('<a class="btn btn-primary btn-sm" href="' + '@Url.Action("Update")' + '?id=' + item.productID + '">Edit</a>'), )
+                ).appendTo('.table');
+            });
+        });
+    });
+</script>
+}
