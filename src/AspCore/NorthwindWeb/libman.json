@@ -45,6 +45,11 @@
     {
       "library": "popper.js@1.15.0",
       "destination": "wwwroot/lib/popper.js/"
+    },
+    {
+      "library": "knockout@3.5.0",
+      "destination": "wwwroot/lib/knockout/"
     }
+
   ]
 }

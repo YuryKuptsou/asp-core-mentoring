@@ -1,15 +1,22 @@
 ﻿@model IEnumerable<CategoryViewModel>
 
 <div class="container my-2">
-    <div class="list-group">
+    <div class="list-group" data-bind="foreach: categories">
+        <div class="list-group-item d-flex align-items-center">
+            <span class="w-25" data-bind="text: categoryName"></span>
+            <a data-bind="attr: {href: imagePath}">
+                <img width="100" height="100" data-bind="attr: {src: imagePath}" />
+            </a>
+            <a class="btn btn-primary btn-sm ml-auto" data-bind="attr: {href: editPath}">Edit</a>
+        </div>
         @*@foreach (var category in Model)
-            {
-                <div class="list-group-item d-flex align-items-center">
-                    <span class="w-25">@category.CategoryName</span>
-                    <northwind-image-link image-id="@category.CategoryID"></northwind-image-link>
-                    <a class="btn btn-primary btn-sm ml-auto" asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryID">Edit</a>
-                </div>
-            }*@
+        {
+            <div class="list-group-item d-flex align-items-center">
+                <span class="w-25">@category.CategoryName</span>
+                <northwind-image-link image-id="@category.CategoryID"></northwind-image-link>
+                <a class="btn btn-primary btn-sm ml-auto" asp-action="Update" asp-controller="Category" asp-route-id="@category.CategoryID">Edit</a>
+            </div>
+        }*@
     </div>
 </div>
 
@@ -25,15 +32,24 @@
         var uri = 'api/categories';
         $("document").ready(function () {
 
-            $.getJSON(uri).done(function (data) {
-                $.each(data, function (key, item) {
-                    $('<div>', { class: "list-group-item d-flex align-items-center" }).append(
-                        $("<span>", { class: "w-25" }).text(item.categoryName),
-                        $("<a>", { href: '@Url.Action("Image")' + '?id=' + item.categoryID }).append($("<img>", { width: 100, height: 100, src: '@Url.Action("Image")' + '?id=' + item.categoryID })),
-                        $('<a class="btn btn-primary btn-sm ml-auto" href="' + '@Url.Action("Update")' + '?id=' + item.categoryID + '">Edit</a>'),
-                    ).appendTo('.list-group');
+            function Category(data) {
+                this.categoryName = data.categoryName;
+                this.imagePath = '@Url.Action("Image")' + '?id=' + data.categoryID;
+                this.editPath = '@Url.Action("Update")' + '?id=' + data.categoryID
+            }
+
+            function CategoryViewModel() {
+                var self = this;
+
+                self.categories = ko.observableArray([]);
+
+                $.getJSON(uri, function (allData) {
+                    var mappedCategories = $.map(allData, function (item) { return new Category(item) });
+                    self.categories(mappedCategories);
                 });
-            });
+            }
+
+            ko.applyBindings(new CategoryViewModel());
         });
     </script>
 

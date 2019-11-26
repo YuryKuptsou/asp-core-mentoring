@@ -14,6 +14,20 @@
             <th>Reorder Level</th>
             <th>Discontinued</th>
         </tr>
+        <tbody data-bind="foreach: products">
+            <tr>
+                <td data-bind="text: productName"></td>
+                <td data-bind="text: companyName"></td>
+                <td data-bind="text: categoryName"></td>
+                <td data-bind="text: quantityPerUnit"></td>
+                <td data-bind="text: unitPrice"></td>
+                <td data-bind="text: unitsInStock"></td>
+                <td data-bind="text: unitsOnOrder"></td>
+                <td data-bind="text: reorderLevel"></td>
+                <td data-bind="text: discontinued"></td>
+                <td><a class="btn btn-primary btn-sm" data-bind="attr: {href: editPath}">Edit</a></td>
+            </tr>
+        </tbody>
         @*@foreach (var product in Model)
         {
             <tr >
@@ -36,24 +50,35 @@
 {
 <script>
     var uri = 'api/products';
+
+
     $("document").ready(function () {
 
-        $.getJSON(uri).done(function (data) {
-            $.each(data, function (key, item) {
-                $('<tr>').append(
-                    $('<td>').text(item.productName),
-                    $('<td>').text(item.companyName),
-                    $('<td>').text(item.categoryName),
-                    $('<td>').text(item.quantityPerUnit),
-                    $('<td>').text(item.unitPrice),
-                    $('<td>').text(item.unitsInStock),
-                    $('<td>').text(item.unitsOnOrder),
-                    $('<td>').text(item.reorderLevel),
-                    $('<td>').text(item.discontinued),
-                    $('<td>').append($('<a class="btn btn-primary btn-sm" href="' + '@Url.Action("Update")' + '?id=' + item.productID + '">Edit</a>'), )
-                ).appendTo('.table');
+        function Product(data) {
+            this.productName = data.productName;
+            this.companyName = data.companyName;
+            this.categoryName = data.categoryName;
+            this.quantityPerUnit = data.quantityPerUnit;
+            this.unitPrice = data.unitPrice;
+            this.unitsInStock = data.unitsInStock;
+            this.unitsOnOrder = data.unitsOnOrder;
+            this.reorderLevel = data.reorderLevel;
+            this.discontinued = data.discontinued;
+            this.editPath = '@Url.Action("Update")' + '?id=' + data.productID;
+        }
+
+        function ProductsViewModel() {
+            var self = this;
+
+            self.products = ko.observableArray([]);
+
+            $.getJSON(uri, function (allData) {
+                var mappedProducts = $.map(allData, function (item) { return new Product(item) });
+                self.products(mappedProducts);
             });
-        });
+        }
+
+        ko.applyBindings(new ProductsViewModel());
     });
 </script>
 }
