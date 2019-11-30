@@ -20,6 +20,16 @@ namespace NorthwindWeb.Controllers.Api
             _productService = productService;
         }
 
+        /// <summary>
+        /// Returns product by id.
+        /// </summary>
+        /// <param name="id">
+        /// Product id.
+        /// </param>
+        /// <remarks>The endpoint to get product.</remarks>
+        /// <returns>Returns product.</returns>
+        /// <response code="200">Returns product.</response>
+        /// <response code="404">Product is not found.</response>
         [HttpGet("product/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -34,6 +44,12 @@ namespace NorthwindWeb.Controllers.Api
             return Ok(product);
         }
 
+        /// <summary>
+        /// Returns all products.
+        /// </summary>
+        /// <remarks>The endpoint to get all products.</remarks>
+        /// <returns>Returns all products.</returns>
+        /// <response code="200">Returns all products.</response>
         [HttpGet("products")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProductDTO>))]
         public ActionResult<ProductDTO> GetAll()
@@ -43,6 +59,12 @@ namespace NorthwindWeb.Controllers.Api
             return Ok(products);
         }
 
+        /// <summary>
+        /// Adds product.
+        /// </summary>
+        /// <remarks>The endpoint to add product.</remarks>
+        /// <returns>Returns product id.</returns>
+        /// <response code="201">Returns product id.</response>
         [HttpPost("product")]
         [ProducesResponseType(201)]
         public ActionResult Create([FromBody] ProductDTO product)
@@ -53,6 +75,18 @@ namespace NorthwindWeb.Controllers.Api
             return CreatedAtAction("Get", new { id = product.ProductID }, product.ProductID);
         }
 
+        /// <summary>
+        /// Updates product.
+        /// </summary>
+        /// <param name="id">
+        /// Product id.
+        /// </param>
+        /// <param name="product">
+        /// Product info.
+        /// </param>
+        /// <remarks>The endpoint to update product.</remarks>
+        /// <response code="200">Product is updated.</response>
+        /// <response code="400">Wrong product info.</response>
         [HttpPut("product/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -69,6 +103,12 @@ namespace NorthwindWeb.Controllers.Api
             return Ok();
         }
 
+
+        /// <summary>
+        /// Removes product.
+        /// </summary>
+        /// <remarks>The endpoint to remove product.</remarks>
+        /// <response code="204">Product is removed.</response>
         [HttpDelete("product/{id}")]
         [ProducesResponseType(204)]
         public ActionResult Remove(int id)

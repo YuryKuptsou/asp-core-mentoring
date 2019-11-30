@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -24,6 +25,7 @@ using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Infrastructure.Services;
 using SmartBreadcrumbs.Extensions;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace NorthwindWeb
 {
@@ -54,6 +56,7 @@ namespace NorthwindWeb
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine()
+                .AddApiExplorer()
                 .AddJsonFormatters()
                 .AddJsonOptions(options =>
                 {
@@ -61,6 +64,13 @@ namespace NorthwindWeb
                 });
 
             services.AddBreadcrumbs(GetType().Assembly);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Northwind API doc", Version = "v1" });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "MyApi.xml");
+                c.IncludeXmlComments(filePath);
+            });
 
             //configure autofac
             var builder = new ContainerBuilder();
@@ -84,9 +94,9 @@ namespace NorthwindWeb
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ImageCacheOptions> options)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ImageCacheOptions> imageCacheOptions)
         {
-            var imageCache = options.Value;
+            var imageCache = imageCacheOptions.Value;
 
             if (env.IsDevelopment())
             {
@@ -104,6 +114,14 @@ namespace NorthwindWeb
             {
                 routes.MapRoute("image", "images/{id}", new { Controller = "Category", Action = "Image" });
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.RoutePrefix = "swagger";
+                options.DocumentTitle = "Northwind API documentation";
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Northwind API V1");
             });
         }
     }

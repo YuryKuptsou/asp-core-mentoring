@@ -23,7 +23,16 @@ namespace NorthwindWeb.Controllers.Api
             _categoryService = categoryService;
         }
 
-
+        /// <summary>
+        /// Returns category by id.
+        /// </summary>
+        /// <param name="id">
+        /// Category id.
+        /// </param>
+        /// <remarks>The endpoint to get category.</remarks>
+        /// <returns>Returns product.</returns>
+        /// <response code="200">Returns category.</response>
+        /// <response code="404">Category is not found.</response>
         [HttpGet("category/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -38,6 +47,12 @@ namespace NorthwindWeb.Controllers.Api
             return Ok(category);
         }
 
+        /// <summary>
+        /// Returns all categories.
+        /// </summary>
+        /// <remarks>The endpoint to get all categories.</remarks>
+        /// <returns>Returns all categories.</returns>
+        /// <response code="200">Returns all categories.</response>
         [HttpGet("categories")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CategoryDTO>))]
         public ActionResult<CategoryDTO> GetAll()
@@ -47,20 +62,43 @@ namespace NorthwindWeb.Controllers.Api
             return Ok(categories);
         }
 
+
+        /// <summary>
+        /// Returns category image by id.
+        /// </summary>
+        /// <param name="id">
+        /// Category id.
+        /// </param>
+        /// <remarks>The endpoint to get category image.</remarks>
+        /// <returns>Returns category image.</returns>
+        /// <response code="200">Returns category image.</response>
+        /// <response code="404">Category is not found.</response>
         [HttpGet("category/image/{id}")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult GetImage(int id)
         {
             var category = _categoryService.Get(id);
             if (category == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return File(category.Picture, category.ContentType);
         }
 
+        /// <summary>
+        /// Uploads category image by id.
+        /// </summary>
+        /// <param name="id">
+        /// Category id.
+        /// </param>
+        /// <param name="image">
+        /// Image.
+        /// </param>
+        /// <remarks>The endpoint to upload category image.</remarks>
+        /// <response code="200">Image is uploaded.</response>
+        /// <response code="400">Wrong image.</response>
         [HttpPost("category/image/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace NorthwindWeb.Controllers
 {
-    [Route("Error")]
-    public class ErrorController : Controller
-    {
-        public IActionResult Error()
-        {
-            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+    //[Route("Error")]
+    //public class ErrorController : Controller
+    //{
+    //    public IActionResult Error()
+    //    {
+    //        var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
-            return View(exceptionHandlerFeature.Error);
-        }
-    }
+    //        return View(exceptionHandlerFeature.Error);
+    //    }
+    //}
 }
