@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{893ACB34-16A7-4B9B-B4C0-708E33AE3068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRestClient", "ConsoleRestClient\ConsoleRestClient.csproj", "{4E01D7CE-7811-4B21-A9B0-F3EBBDFCF0BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleRestClient", "ConsoleRestClient\ConsoleRestClient.csproj", "{4E01D7CE-7811-4B21-A9B0-F3EBBDFCF0BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTests", "ApiTests\ApiTests.csproj", "{A7083202-7B13-4E08-895E-2D7C8C280C1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IO.Swagger", "IO.Swagger\IO.Swagger.csproj", "{1180704B-1B0F-46CE-9530-1C5093BCC72E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{4E01D7CE-7811-4B21-A9B0-F3EBBDFCF0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E01D7CE-7811-4B21-A9B0-F3EBBDFCF0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E01D7CE-7811-4B21-A9B0-F3EBBDFCF0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7083202-7B13-4E08-895E-2D7C8C280C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7083202-7B13-4E08-895E-2D7C8C280C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7083202-7B13-4E08-895E-2D7C8C280C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7083202-7B13-4E08-895E-2D7C8C280C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1180704B-1B0F-46CE-9530-1C5093BCC72E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1180704B-1B0F-46CE-9530-1C5093BCC72E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1180704B-1B0F-46CE-9530-1C5093BCC72E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1180704B-1B0F-46CE-9530-1C5093BCC72E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

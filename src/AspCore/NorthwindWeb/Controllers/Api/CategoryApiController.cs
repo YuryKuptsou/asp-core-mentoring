@@ -36,7 +36,7 @@ namespace NorthwindWeb.Controllers.Api
         [HttpGet("category/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult Get(int id)
+        public ActionResult<CategoryDTO> Get(int id)
         {
             var category = _categoryService.Get(id);
             if (category == null)

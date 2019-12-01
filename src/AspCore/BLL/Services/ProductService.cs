@@ -84,16 +84,19 @@ namespace BLL.Services
             return productsWithDetails;
         }
 
-        public void CreateOrUpdate(ProductDTO product)
+        public int CreateOrUpdate(ProductDTO product)
         {
+            int id = product.ProductID;
             if (product.ProductID == 0)
             {
-                _productRepository.Create(_mapper.Map<Product>(product));
+                id = _productRepository.Create(_mapper.Map<Product>(product)).ProductID;
             }
             else
             {
                 _productRepository.Update(_mapper.Map<Product>(product));
             }
+
+            return id;
         }
 
         public void Remove(ProductDTO product)

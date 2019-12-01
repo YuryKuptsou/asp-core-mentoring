@@ -33,7 +33,7 @@ namespace NorthwindWeb.Controllers.Api
         [HttpGet("product/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult Get(int id)
+        public ActionResult<ProductDTO> Get(int id)
         {
             var product = _productService.Get(id);
             if (product == null)
@@ -67,12 +67,12 @@ namespace NorthwindWeb.Controllers.Api
         /// <response code="201">Returns product id.</response>
         [HttpPost("product")]
         [ProducesResponseType(201)]
-        public ActionResult Create([FromBody] ProductDTO product)
+        public ActionResult<int> Create([FromBody] ProductDTO product)
         {
             product.ProductID = 0;
-            _productService.CreateOrUpdate(product);
+            var id = _productService.CreateOrUpdate(product);
 
-            return CreatedAtAction("Get", new { id = product.ProductID }, product.ProductID);
+            return CreatedAtAction("Get", new { id }, id);
         }
 
         /// <summary>
