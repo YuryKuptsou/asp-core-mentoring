@@ -110,6 +110,7 @@ namespace NorthwindWeb
             //app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
 
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute("image", "images/{id}", new { Controller = "Category", Action = "Image" });
