@@ -12,6 +12,7 @@ using BLL.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +54,7 @@ namespace NorthwindWeb
             services.Configure<ProductOptions>(Configuration);
             services.Configure<ImageCacheOptions>(Configuration);
             services.Configure<LogActionOptions>(Configuration);
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine()
@@ -64,6 +66,8 @@ namespace NorthwindWeb
                 });
 
             services.AddBreadcrumbs(GetType().Assembly);
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddSwaggerGen(c =>
             {
