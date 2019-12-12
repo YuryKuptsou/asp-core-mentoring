@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ using SmartBreadcrumbs.Attributes;
 
 namespace NorthwindWeb.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IMapper _mapper;

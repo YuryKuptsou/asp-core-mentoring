@@ -21,8 +21,7 @@ namespace NorthwindWeb.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("NorthwindContextConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>()
-                    .AddEntityFrameworkStores<NorthwindContext>();
+                
                 
             });
         }

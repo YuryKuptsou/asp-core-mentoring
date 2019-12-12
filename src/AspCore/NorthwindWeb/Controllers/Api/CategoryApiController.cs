@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NorthwindWeb.Infrastructure.Extensions;
@@ -14,6 +15,7 @@ namespace NorthwindWeb.Controllers.Api
 {
     [Route("api")]
     [ApiController]
+    [Authorize]
     public class CategoryApiController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

@@ -9,9 +9,13 @@ using AutoMapper;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using BLL.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +29,7 @@ using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Infrastructure.Interfaces;
 using NorthwindWeb.Infrastructure.Options;
 using NorthwindWeb.Infrastructure.Services;
+using NorthwindWeb.Models;
 using SmartBreadcrumbs.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -55,6 +60,33 @@ namespace NorthwindWeb
             services.Configure<ImageCacheOptions>(Configuration);
             services.Configure<LogActionOptions>(Configuration);
             services.Configure<AuthMessageSenderOptions>(Configuration);
+
+
+
+
+
+            services.AddDefaultIdentity<IdentityUser>()
+                    .AddEntityFrameworkStores<NorthwindContext>();
+
+            services.AddAuthentication()
+                .AddAzureAD(options => Configuration.Bind("AzureAd", options))
+                .AddCookie(); ;
+
+            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
+            {
+                options.Authority = options.Authority + "/v2.0/";
+                options.TokenValidationParameters.ValidateIssuer = false;
+            });
+
+
+
+
+
+
+
+
+
+            
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine()
@@ -112,7 +144,7 @@ namespace NorthwindWeb
             }
 
             //app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
-
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc(routes =>
