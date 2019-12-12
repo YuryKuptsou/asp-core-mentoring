@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NorthwindWeb.Infrastructure.Extensions;
 using NorthwindWeb.Models;
@@ -13,6 +14,7 @@ using SmartBreadcrumbs.Attributes;
 
 namespace NorthwindWeb.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly IMapper _mapper;

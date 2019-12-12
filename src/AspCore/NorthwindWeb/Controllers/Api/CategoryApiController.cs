@@ -35,6 +35,7 @@ namespace NorthwindWeb.Controllers.Api
         /// <returns>Returns product.</returns>
         /// <response code="200">Returns category.</response>
         /// <response code="404">Category is not found.</response>
+        [AllowAnonymous]
         [HttpGet("category/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -55,6 +56,7 @@ namespace NorthwindWeb.Controllers.Api
         /// <remarks>The endpoint to get all categories.</remarks>
         /// <returns>Returns all categories.</returns>
         /// <response code="200">Returns all categories.</response>
+        [AllowAnonymous]
         [HttpGet("categories")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CategoryDTO>))]
         public ActionResult<CategoryDTO> GetAll()
@@ -75,6 +77,7 @@ namespace NorthwindWeb.Controllers.Api
         /// <returns>Returns category image.</returns>
         /// <response code="200">Returns category image.</response>
         /// <response code="404">Category is not found.</response>
+        [AllowAnonymous]
         [HttpGet("category/image/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

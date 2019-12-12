@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityUser>
+
+<div class="container my-2">
+    <table class="table">
+        <tr class="table-header text-center">
+            <th>Users</th>
+        </tr>
+
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+        </tr>
+    }
+    </table>
+</div>

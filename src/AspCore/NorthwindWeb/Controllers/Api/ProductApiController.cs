@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.DTO;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace NorthwindWeb.Controllers.Api
 {
     [Route("api")]
     [ApiController]
+    [Authorize]
     public class ProductApiController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -30,6 +32,7 @@ namespace NorthwindWeb.Controllers.Api
         /// <returns>Returns product.</returns>
         /// <response code="200">Returns product.</response>
         /// <response code="404">Product is not found.</response>
+        [AllowAnonymous]
         [HttpGet("product/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -50,6 +53,7 @@ namespace NorthwindWeb.Controllers.Api
         /// <remarks>The endpoint to get all products.</remarks>
         /// <returns>Returns all products.</returns>
         /// <response code="200">Returns all products.</response>
+        [AllowAnonymous]
         [HttpGet("products")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProductDTO>))]
         public ActionResult<ProductDTO> GetAll()

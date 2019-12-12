@@ -63,10 +63,9 @@ namespace NorthwindWeb
 
 
 
-
-
             services.AddDefaultIdentity<IdentityUser>()
-                    .AddEntityFrameworkStores<NorthwindContext>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<NorthwindContext>();
 
             services.AddAuthentication()
                 .AddAzureAD(options => Configuration.Bind("AzureAd", options))
@@ -78,15 +77,6 @@ namespace NorthwindWeb
                 options.TokenValidationParameters.ValidateIssuer = false;
             });
 
-
-
-
-
-
-
-
-
-            
 
             services.AddMvcCore(options => options.Filters.Add(typeof(LogActionFilter)))
                 .AddRazorViewEngine()
@@ -130,7 +120,8 @@ namespace NorthwindWeb
             return new AutofacServiceProvider(container);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ImageCacheOptions> imageCacheOptions)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            IOptions<ImageCacheOptions> imageCacheOptions, IServiceProvider serviceProvider)
         {
             var imageCache = imageCacheOptions.Value;
 
@@ -160,6 +151,44 @@ namespace NorthwindWeb
                 options.DocumentTitle = "Northwind API documentation";
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Northwind API V1");
             });
+
+            CreateAdminUser(serviceProvider).Wait();
+        }
+
+        private async Task CreateAdminUser(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var role = "Administrator";
+
+            var roleExist = await roleManager.RoleExistsAsync(role);
+
+            if (!roleExist)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+
+            var email = Configuration["UserEmail"];
+            var pass = Configuration["UserPass"];
+
+            var admin = new IdentityUser
+            {
+
+                UserName = email,
+                Email = email,
+            };
+
+            var _user = await userManager.FindByEmailAsync(email);
+
+            if (_user == null)
+            {
+                var result = await userManager.CreateAsync(admin, pass);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, role);
+
+                }
+            }
         }
     }
 }
