@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -137,6 +138,12 @@ namespace NorthwindWeb
             //app.UseImageCache(imageCache.ImageCacheFolder, imageCache.MaxCachedImages, imageCache.ImageCacheExpiration);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
