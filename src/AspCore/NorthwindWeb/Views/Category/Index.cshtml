@@ -29,7 +29,7 @@
 @section Scripts
 {
     <script>
-        var uri = 'api/categories';
+        var uri_category = 'api/categories';
         $("document").ready(function () {
 
             function Category(data) {
@@ -43,7 +43,7 @@
 
                 self.categories = ko.observableArray([]);
 
-                $.getJSON(uri, function (allData) {
+                $.getJSON(uri_category, function (allData) {
                     var mappedCategories = $.map(allData, function (item) { return new Category(item) });
                     self.categories(mappedCategories);
                 });

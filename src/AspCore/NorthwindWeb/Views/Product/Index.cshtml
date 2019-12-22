@@ -49,8 +49,8 @@
 @section Scripts
 {
 <script>
-    var uri = 'api/products';
-
+    var uri_product = 'api/products';
+    
 
     $("document").ready(function () {
 
@@ -72,7 +72,7 @@
 
             self.products = ko.observableArray([]);
 
-            $.getJSON(uri, function (allData) {
+            $.getJSON(uri_product, function (allData) {
                 var mappedProducts = $.map(allData, function (item) { return new Product(item) });
                 self.products(mappedProducts);
             });
